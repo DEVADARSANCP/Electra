@@ -1,5 +1,3 @@
-# Electra
-
 # EV Smart Trip Planner
 
 > A hackathon project that reimagines EV trip planning — reducing range anxiety, optimizing charging stops, and turning downtime into meaningful time.
@@ -96,7 +94,7 @@ With EV adoption rising, drivers face new challenges:
 
 ## Team
 
-- [Your Team Name]
-- Built for [Hackathon Name], [Year]
+- Electra
+- Built for HashItUp, 2025
 
 ---
