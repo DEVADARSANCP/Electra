@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EV Smart Notification</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e0f2f1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+      width: 400px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #00796b;
+      font-size: 22px;
+    }
+
+    #info {
+      background: #f1f8e9;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+      font-size: 16px;
+      color: #33691e;
+      margin-top: 20px;
+      min-height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    button {
+      background: #00796b;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #004d40;
+      transform: scale(1.05);
+    }
+
+    .recommendation {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .confidence {
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    canvas {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <h1>EV Charging Notification</h1>
+  <button onclick="fetchNotification()">Get Smart Notification</button>
+  <div id="info">Your notification will appear here</div>
+  
+  <!-- Charts -->
+  <canvas id="batteryChart" width="350" height="150"></canvas>
+  <canvas id="distanceChart" width="350" height="150"></canvas>
+  <canvas id="confidenceChart" width="350" height="150"></canvas>
+</div>
+
+<script>
+let batteryChart, distanceChart, confidenceChart;
+
+function updateCharts(battery_soc, trip_distance, confidence, recommendation) {
+  const batteryCtx = document.getElementById('batteryChart').getContext('2d');
+  const distanceCtx = document.getElementById('distanceChart').getContext('2d');
+  const confidenceCtx = document.getElementById('confidenceChart').getContext('2d');
+
+  if (batteryChart) batteryChart.destroy();
+  if (distanceChart) distanceChart.destroy();
+  if (confidenceChart) confidenceChart.destroy();
+
+  // Color based on recommendation
+  const color = recommendation === 'AC' ? '#43a047' : '#e53935'; 
+
+  batteryChart = new Chart(batteryCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Battery SOC', 'Empty'],
+      datasets: [{
+        data: [battery_soc, 100 - battery_soc],
+        backgroundColor: [color, '#c8e6c9']
+      }]
+    },
+    options: { plugins: { title: { display: true, text: 'Battery SOC (%)' } } }
+  });
+
+  distanceChart = new Chart(distanceCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Trip Distance'],
+      datasets: [{
+        label: 'Distance (km)',
+        data: [trip_distance],
+        backgroundColor: [color]
+      }]
+    },
+    options: { scales: { y: { beginAtZero: true, max: 200 } }, plugins: { title: { display: true, text: 'Trip Distance' } } }
+  });
+
+  confidenceChart = new Chart(confidenceCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Confidence'],
+      datasets: [{
+        label: 'Confidence (%)',
+        data: [confidence*100],
+        backgroundColor: [color]
+      }]
+    },
+    options: { scales: { y: { beginAtZero: true, max: 100 } }, plugins: { title: { display: true, text: 'Prediction Confidence' } } }
+  });
+}
+
+async function fetchNotification() {
+  const infoDiv = document.getElementById("info");
+  infoDiv.innerHTML = "Fetching notification...";
+
+  try {
+    const response = await fetch("http://localhost:8000/notification");
+    if (!response.ok) throw new Error("Network response was not ok");
+
+    const data = await response.json();
+
+    if (data.error) {
+      infoDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
+    } else {
+      // Set colors for recommendation
+      const recColor = data.recommendation === 'AC' ? '#43a047' : '#e53935';
+      infoDiv.innerHTML = `
+        <div class="recommendation" style="color:${recColor}">Charging Recommendation: ${data.recommendation}</div>
+        <div class="confidence">Confidence: ${(data.confidence*100).toFixed(1)}%</div>
+      `;
+      updateCharts(data.battery_soc || 50, data.trip_distance_km || 50, data.confidence, data.recommendation);
+    }
+  } catch (err) {
+    console.error(err);
+    infoDiv.innerHTML = `<strong>Error fetching notification:</strong> ${err.message}`;
+  }
+}
+</script>
+
+</body>
+</html>
