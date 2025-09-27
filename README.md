@@ -1,12 +1,12 @@
 # Electra
 
-# 🚗⚡ EV Smart Trip Planner
+# EV Smart Trip Planner
 
 > A hackathon project that reimagines EV trip planning — reducing range anxiety, optimizing charging stops, and turning downtime into meaningful time.
 
 ---
 
-## 🌍 Problem
+##  Problem
 
 With EV adoption rising, drivers face new challenges:
 
@@ -16,7 +16,7 @@ With EV adoption rising, drivers face new challenges:
 
 ---
 
-## 💡 Our Solution
+## Our Solution
 
 **EV Smart Trip Planner** is like Google Maps but designed for EV owners.
 
@@ -41,7 +41,7 @@ With EV adoption rising, drivers face new challenges:
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️Tech Stack
 
 **Frontend**
 - React (Web) / React Native (Mobile)
@@ -60,7 +60,7 @@ With EV adoption rising, drivers face new challenges:
 
 ---
 
-## ⚡ Challenges
+## Challenges
 
 - **Battery Health Access** → true SoH requires OBD-II or OEM APIs → workaround with estimates.
 - **Driving Behavior Variability** → speed, terrain, AC use → modeled with a “driving style” slider.
@@ -69,7 +69,7 @@ With EV adoption rising, drivers face new challenges:
 
 ---
 
-## 🚀 MVP Scope (Hackathon Deliverable)
+## MVP Scope (Hackathon Deliverable)
 
 - User selects **Start & Destination**.
 - App suggests **route + charging stops**.
@@ -80,13 +80,13 @@ With EV adoption rising, drivers face new challenges:
 
 ---
 
-## 🎯 Pitch Line
+##  Pitch Line
 
 > *“Our app doesn’t just solve range anxiety — it makes EV road trips smarter, healthier, and more meaningful. By combining EV-specific trip planning with lifestyle recommendations, we transform downtime into quality time.”*
 
 ---
 
-## 📸 Demo Preview (to add)
+##  Demo Preview (to add)
 
 - Route planning screenshot
 - Charging stop suggestion card
@@ -94,7 +94,7 @@ With EV adoption rising, drivers face new challenges:
 
 ---
 
-## 👥 Team
+## Team
 
 - [Your Team Name]
 - Built for [Hackathon Name], [Year]
